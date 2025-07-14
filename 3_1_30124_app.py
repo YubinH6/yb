@@ -1,52 +1,57 @@
 import streamlit as st
-from datetime import date
+from datetime import datetime
 
-st.title("품목별 남은 소비기간 할인 계산기")
+st.title("소비 기한 할인율 계산기")
 
-item_name = st.selectbox("품목 선택", ["고기", "생선", "과일", "도시락", "빵"])
-purchase_date = st.date_input("구매 날짜", date.today())
-expiration_date = st.date_input("소비기한", date.today())
-original_price = st.number_input("제품 가격 입력", min_value=0)
+item_name = st.selectbox("Select Item", ["고기", "생선", "과일", "도시락", "빵", "유제품", "가공 식품", "건강 기능 식품"])
+purchase_datetime = st.datetime_input("구매 날짜 및 시간", datetime.now())
+expiration_datetime = st.datetime_input("소비 기한 날짜 및 시간", datetime.now())
+original_price = st.number_input("원래 가격", min_value=0.0)
 
-def dicount_rate_calculation(item_name, days_left):
-    if item_name in ["고기", "생선","과일", "도시락", "빵"]:
-        if 0 < days_left <= 1:
-            return 40+30*(24-days_left)/24
-        elif 2 <= days_left <= 3:
-            return 20+20*(24-days_left)/24
-        elif days_left == 0 :
-            return 100 #판매 중지 상품(소비 기한 0)
+time_left = (expiration_datetime - purchase_datetime).total_seconds() / 3600  # 시간 단위 계산
 
-    elif item_name in ["유제품"]:
-        if 0 < days_left <= 3 :
-            return 30+30*(24-days_left)/24
-        elif 4 <= days_left <= 7 :
-            return 10+20*(24-days_left)/24
-        elif days_left == 0:
-            return 100
+def calculate_discount_rate(item, hours_left):
+    if hours_left <= 0:
+        return 1.0
+    if item in ["고기", "생선", "과일", "도시락", "빵"]:
+        if 0 < hours_left <= 24:
+            return (40 + 30 * (24 - hours_left) / 24) / 100
+        elif 48 >= hours_left > 24:
+            return (20 + 20 * (48 - hours_left) / 24) / 100
+        else:
+            return 0.0
+    elif item == "유제품":
+        if 0 < hours_left <= 72:
+            return (30 + 30 * (72 - hours_left) / 72) / 100
+        elif 168 >= hours_left > 72:
+            return (10 + 20 * (168 - hours_left) / 96) / 100
+        else:
+            return 0.0
+    elif item == "가공 식품":
+        if 168 < hours_left <= 336:
+            return (30 + 20 * (336 - hours_left) / 168) / 100
+        elif 672 >= hours_left > 336:
+            return (10 + 20 * (672 - hours_left) / 336) / 100
+        else:
+            return 0.0
+    elif item == "건강 기능 식품":
+        if 2016 < hours_left <= 4032:
+            return (30 + 20 * (4032 - hours_left) / 2016) / 100
+        elif 2016 >= hours_left > 672:
+            return (50 + 20 * (2016 - hours_left) / 1344) / 100
+        else:
+            return 0.0
+    else:
+        return 0.0
 
-    elif item_name in ["가공 식품"]:
-        if 7 < days_left <=14:
-            return 30+20*(24-days_left)/24
-        elif 14 <= days_left <= 28 :
-            return 10+20*(24-days_left)/24
-        elif days_left == 0:
-            return 100
-
-    elif item_name in ["건강 기능 식품"]:
-        if 84 <= days_left <= 168 :
-            return 30+20*(24-days_left)/24
-        elif 28 <= days_left <= 84:
-            return 50+20*(24-dyas_left)/24
-        elif days_left == 0:
-            return 100
-
-남은_일수 = (소비기한 - date.today()).days
-if 남은_일수 < 0:
-    st.write("이미 소비기한이 지났습니다.")
+if original_price > 0:
+    if time_left < 0:
+        st.write("이미 소비기한이 지난 제품입니다.")
+    else:
+        discount_rate = calculate_discount_rate(item_name, time_left)
+        discounted_price = original_price * (1 - discount_rate)
+        st.write(f"남은 시간: {int(time_left)}시간")
+        st.write(f"예상 할인률: {discount_rate * 100:.1f}%")
+        st.write(f"할인 적용 가격: {discounted_price:.2f} 원")
 else:
-    할인률 = 할인률_계산(품목, 남은_일수)
-    할인가 = 제품_가격 * (1 - 할인률)
-    st.write(f"남은 소비기간: {남은_일수}일")
-    st.write(f"할인 적용가: {할인가:.2f}원")
-    st.write(f"예상 할인률: {할인률*100:.0f}%")
+    st.write("제품 가격을 입력해주세요.")
