@@ -3,6 +3,7 @@ from datetime import datetime
 
 st.title("소비 기한 할인률 계산기")
 
+# 입력 받기
 item_name = st.selectbox("품목 선택", ["고기", "생선", "과일", "도시락", "빵", "유제품", "가공 식품", "건강 기능 식품"])
 
 purchase_date = st.date_input("구매 날짜", datetime.today())
@@ -15,8 +16,10 @@ expiration_datetime = datetime.combine(expiration_date, expiration_time)
 
 original_price = st.number_input("원래 가격", min_value=0.0)
 
+# 남은 시간 계산
 time_left = (expiration_datetime - purchase_datetime).total_seconds() / 3600
 
+# 할인률 계산 함수
 def calculate_discount_rate(item, hours_left):
     st.write(f"DEBUG - 품목: {item}, 남은 시간: {hours_left:.2f} 시간")
 
@@ -25,11 +28,11 @@ def calculate_discount_rate(item, hours_left):
         return 1.0
 
     if item in ["고기", "생선", "과일", "도시락", "빵"]:
-        if hours_left <= 24:
+        if 0 < hours_left <= 24:
             discount = (40 + 30 * (24 - hours_left) / 24) / 100
             st.write(f"DEBUG - 할인률 (0~24h): {discount * 100:.1f}%")
             return discount
-        elif hours_left <= 48:
+        elif 24 < hours_left <= 48:
             discount = (20 + 20 * (48 - hours_left) / 24) / 100
             st.write(f"DEBUG - 할인률 (24~48h): {discount * 100:.1f}%")
             return discount
@@ -38,11 +41,11 @@ def calculate_discount_rate(item, hours_left):
             return 0.0
 
     elif item == "유제품":
-        if hours_left <= 72:
+        if 0 < hours_left <= 72:
             discount = (30 + 30 * (72 - hours_left) / 72) / 100
             st.write(f"DEBUG - 할인률 (0~72h): {discount * 100:.1f}%")
             return discount
-        elif hours_left <= 168:
+        elif 72 < hours_left <= 168:
             discount = (10 + 20 * (168 - hours_left) / 96) / 100
             st.write(f"DEBUG - 할인률 (72~168h): {discount * 100:.1f}%")
             return discount
@@ -51,11 +54,11 @@ def calculate_discount_rate(item, hours_left):
             return 0.0
 
     elif item == "가공 식품":
-        if hours_left <= 336:
+        if 168 < hours_left <= 336:
             discount = (30 + 20 * (336 - hours_left) / 168) / 100
             st.write(f"DEBUG - 할인률 (168~336h): {discount * 100:.1f}%")
             return discount
-        elif hours_left <= 672:
+        elif 336 < hours_left <= 672:
             discount = (10 + 20 * (672 - hours_left) / 336) / 100
             st.write(f"DEBUG - 할인률 (336~672h): {discount * 100:.1f}%")
             return discount
@@ -64,11 +67,11 @@ def calculate_discount_rate(item, hours_left):
             return 0.0
 
     elif item == "건강 기능 식품":
-        if hours_left <= 4032 and hours_left > 2016:
+        if 2016 < hours_left <= 4032:
             discount = (30 + 20 * (4032 - hours_left) / 2016) / 100
             st.write(f"DEBUG - 할인률 (2016~4032h): {discount * 100:.1f}%")
             return discount
-        elif hours_left <= 2016 and hours_left > 672:
+        elif 672 < hours_left <= 2016:
             discount = (50 + 20 * (2016 - hours_left) / 1344) / 100
             st.write(f"DEBUG - 할인률 (672~2016h): {discount * 100:.1f}%")
             return discount
@@ -78,6 +81,7 @@ def calculate_discount_rate(item, hours_left):
 
     return 0.0
 
+# 출력
 if st.button("계산하기"):
     if original_price > 0:
         discount_rate = calculate_discount_rate(item_name, time_left)
