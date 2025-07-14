@@ -2,7 +2,6 @@ import streamlit as st
 from datetime import datetime
 
 st.title("소비 기한 할인률 계산기")
-
 item_name = st.selectbox("품목 선택", ["고기", "생선", "과일", "도시락", "빵", "유제품", "가공 식품", "건강 기능 식품"])
 
 purchase_date = st.date_input("구매 날짜", datetime.today())
