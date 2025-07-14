@@ -21,28 +21,28 @@ def calculate_discount_rate(item, hours_left):
     if item in ["고기", "생선", "과일", "도시락", "빵"]:
         if 0 < hours_left <= 24:
             return (40 + 30 * (24 - hours_left) / 24) / 100
-        elif 48 >= hours_left > 24:
+        elif 24 < hours_left <= 48:
             return (20 + 20 * (48 - hours_left) / 24) / 100
         else:
             return 0.0
     elif item == "유제품":
         if 0 < hours_left <= 72:
             return (30 + 30 * (72 - hours_left) / 72) / 100
-        elif 168 >= hours_left > 72:
+        elif 72 < hours_left <= 168:
             return (10 + 20 * (168 - hours_left) / 96) / 100
         else:
             return 0.0
     elif item == "가공 식품":
         if 168 < hours_left <= 336:
             return (30 + 20 * (336 - hours_left) / 168) / 100
-        elif 672 >= hours_left > 336:
+        elif 336 < hours_left <= 672:
             return (10 + 20 * (672 - hours_left) / 336) / 100
         else:
             return 0.0
     elif item == "건강 기능 식품":
         if 2016 < hours_left <= 4032:
             return (30 + 20 * (4032 - hours_left) / 2016) / 100
-        elif 2016 >= hours_left > 672:
+        elif 672 < hours_left <= 2016:
             return (50 + 20 * (2016 - hours_left) / 1344) / 100
         else:
             return 0.0
