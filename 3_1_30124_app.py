@@ -3,7 +3,6 @@ from datetime import datetime
 
 st.title("소비 기한 할인률 계산기")
 
-# 입력값
 item_name = st.selectbox("품목 선택", ["고기", "생선", "과일", "도시락", "빵", "유제품", "가공 식품", "건강 기능 식품"])
 
 purchase_date = st.date_input("구매 날짜", datetime.today())
@@ -16,11 +15,9 @@ expiration_datetime = datetime.combine(expiration_date, expiration_time)
 
 original_price = st.number_input("원래 가격", min_value=0.0)
 
-# 남은 시간 계산 (단위: 시간)
 time_left = (expiration_datetime - purchase_datetime).total_seconds() / 3600
 hours_left = int(time_left)
 
-# 할인률 계산 함수
 def calculate_discount_rate(item, hours):
     if hours <= 0:
         return 1.0
@@ -53,8 +50,7 @@ def calculate_discount_rate(item, hours):
         else:
             return 0.0
     return 0.0
-
-# 출력
+    
 if st.button("계산하기"):
     if original_price > 0:
         discount_rate = calculate_discount_rate(item_name, hours_left)
