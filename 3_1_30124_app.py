@@ -48,3 +48,16 @@ def calculate_discount_rate(item, hours_left):
             return (50 + 20 * (2016 - hours_left) / 1344) / 100
         else:
             return 0.0
+            
+if st.button("계산하기"):
+    if original_price > 0:
+        if time_left < 0:
+            st.write("이미 소비기한이 지난 제품입니다.")
+        else:
+            discount_rate = calculate_discount_rate(item_name, time_left)
+            discounted_price = original_price * (1 - discount_rate)
+            st.write(f"남은 시간: {int(time_left)}시간")
+            st.write(f"예상 할인률: {discount_rate * 100:.1f}%")
+            st.write(f"할인 적용 가격: {discounted_price:.2f} 원")
+    else:
+        st.write("제품 가격을 입력해주세요.")
