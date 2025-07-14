@@ -56,7 +56,7 @@ if st.button("계산하기"):
         discounted_price = original_price * (1 - discount_rate)
         st.write(f"남은 시간(시간): {hours_left}")
         st.write(f"선택 품목: {item_name}")
-        st.write(f"계산된 할인률: {discount_rate * 100:.1f}%")
+        st.write(f"계산된 할인율: {discount_rate * 100:.1f}%")
         st.write(f"할인 적용 가격: {discounted_price:.2f} 원")
     else:
         st.write("제품 가격을 입력해주세요.")
