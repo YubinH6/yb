@@ -1,7 +1,13 @@
 import streamlit as st
 from datetime import datetime
 
-st.title("소비 기한 할인율 계산기")
+st.title("🛒 소비 기한 할인율 계산기")
+st.subheader("제작자 : 30124 황유빈")
+st.markdown("""
+> **설명:**
+> 아래에서 품목을 선택하고 구매 날짜와 시간, 소비 기한 날짜와 시간을 입력하면 할인률과 할인 적용가를 계산해드립니다.
+""")
+
 item_name = st.selectbox("품목 선택", ["고기", "생선", "과일", "도시락", "빵", "유제품", "가공 식품", "건강 기능 식품"])
 
 purchase_date = st.date_input("구매 날짜", datetime.today())
@@ -51,6 +57,7 @@ def calculate_discount_rate(item, hours):
     return 0.0
     
 if st.button("계산하기"):
+    st.write("✓") 
     if original_price > 0:
         discount_rate = calculate_discount_rate(item_name, hours_left)
         discounted_price = original_price * (1 - discount_rate)
